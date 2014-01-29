@@ -1,15 +1,19 @@
+Features:
+- for loop
+- user defined operators
+
 Lexer:
 - fix allowing multiple decimals in a number
-- look into exception handling and error reporting
 
 Parser:
 - possibly relegate AST classes to parser
 - modify exception handling between parser and lexer
-- convert error functions to exception classes
-- writing tests and fixing bugs
+- writing tests
+
+ASTs:
+- add toString methods for debugging purposes
 
 Driver:
 - clean up and possibly merge with parser (?)
-- look into issues with parser
 
 * document code more!

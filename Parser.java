@@ -120,6 +120,8 @@ public class Parser {
 			return parseNumberExpr();
 		if (currToken.getUnknownChar() == '(')
 			return parseParenExpr();
+		if (currToken.getType() == TokenClass.IF)
+			return parseIfExpr();
 		
 		return errorExpr("unknown token when expecting an expression");
 	}
@@ -208,6 +210,33 @@ public class Parser {
 		// anonymous prototype for function
 		PrototypeAST prototype = new PrototypeAST("", new ArrayList<String>());
 		return new FunctionAST(prototype, expr);
+	}
+	
+	public ExprAST parseIfExpr() {
+		getNextToken(); // eat 'if'
+		
+		// condition
+		ExprAST condExpr = parseExpression();
+		if (condExpr == null)
+			return null;
+		
+		if (currToken.getType() != TokenClass.THEN)
+			return errorExpr("expected 'then'");
+		getNextToken(); // eat 'then'
+		
+		ExprAST thenExpr = parseExpression();
+		if (thenExpr == null)
+			return null;
+		
+		if (currToken.getType() != TokenClass.ELSE)
+			return errorExpr("expected 'else'");
+		getNextToken(); // eat 'else'
+		
+		ExprAST elseExpr = parseExpression();
+		if (elseExpr == null)
+			return null;
+		
+		return new IfExprAST(condExpr, thenExpr, elseExpr);
 	}
 	
 	/*

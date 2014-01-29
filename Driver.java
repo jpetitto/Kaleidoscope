@@ -3,7 +3,7 @@ import java.io.FileNotFoundException;
 
 public class Driver {
 	public static void main(String[] args) throws FileNotFoundException {
-		Parser parser = new Parser("sourcecode.k");
+		Parser parser = new Parser("fib.k");
 		Token currToken = parser.getNextToken(); // prime the pump
 		
 		while (true) {

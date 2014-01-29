@@ -35,10 +35,17 @@ public class Lexer {
 				lastChar = (char) buffer.read();
 			} while (Character.isLetterOrDigit(lastChar));
 			
+			// check if identifier matches keyword
 			if (identStr.equalsIgnoreCase("def"))
 				return new Token(TokenClass.DEF);
 			if (identStr.equalsIgnoreCase("extern"))
 				return new Token(TokenClass.EXTERN);
+			if (identStr.equalsIgnoreCase("if"))
+				return new Token(TokenClass.IF);
+			if (identStr.equalsIgnoreCase("then"))
+				return new Token(TokenClass.THEN);
+			if (identStr.equalsIgnoreCase("else"))
+				return new Token(TokenClass.ELSE);
 			
 			token = new Token(TokenClass.IDENTFIFIER);
 			token.setIdentStr(identStr);
