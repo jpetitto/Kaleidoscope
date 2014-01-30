@@ -46,6 +46,10 @@ public class Lexer {
 				return new Token(TokenClass.THEN);
 			if (identStr.equalsIgnoreCase("else"))
 				return new Token(TokenClass.ELSE);
+			if (identStr.equalsIgnoreCase("for"))
+				return new Token(TokenClass.FOR);
+			if (identStr.equalsIgnoreCase("in"))
+				return new Token(TokenClass.IN);
 			
 			token = new Token(TokenClass.IDENTFIFIER);
 			token.setIdentStr(identStr);

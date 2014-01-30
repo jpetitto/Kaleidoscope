@@ -122,6 +122,8 @@ public class Parser {
 			return parseParenExpr();
 		if (currToken.getType() == TokenClass.IF)
 			return parseIfExpr();
+		if (currToken.getType() == TokenClass.FOR)
+			return parseForExpr();
 		
 		return errorExpr("unknown token when expecting an expression");
 	}
@@ -237,6 +239,51 @@ public class Parser {
 			return null;
 		
 		return new IfExprAST(condExpr, thenExpr, elseExpr);
+	}
+	
+	public ExprAST parseForExpr() {
+		getNextToken(); // eat 'for'
+		
+		if (currToken.getType() != TokenClass.IDENTFIFIER)
+			return errorExpr("expected identifier after 'for'");
+		
+		String varName = currToken.getIdentStr();
+		getNextToken(); // eat identifier
+		
+		if (currToken.getUnknownChar() != '=')
+			return errorExpr("expected '=' after " + varName);
+		getNextToken(); // eat '='
+		
+		ExprAST start = parseExpression();
+		if (start == null)
+			return null;
+		
+		if (currToken.getUnknownChar() != ',')
+			return errorExpr("expected ',' after for start value");
+		getNextToken(); // eat ','
+		
+		ExprAST end = parseExpression();
+		if (end == null)
+			return null;
+		
+		// step value is optional
+		ExprAST step = null;
+		if (currToken.getUnknownChar() == ',') {
+			getNextToken(); // eat ','
+			step = parseExpression();
+			if (step == null)
+				return null;
+		}
+		
+		if (currToken.getType() != TokenClass.IN)
+			return errorExpr("expected 'in' after for");
+		getNextToken(); // eat 'in'
+		
+		ExprAST body = parseExpression();
+		if (body == null)
+			return null;
+		
+		return new ForExprAST(varName, start, end, step, body);
 	}
 	
 	/*

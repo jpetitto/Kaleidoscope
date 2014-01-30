@@ -9,4 +9,8 @@ public class VariableExprAST implements ExprAST {
 	public String getName() {
 		return name;
 	}
+	
+	public String toString() {
+		return "name = " + name;
+	}
 }

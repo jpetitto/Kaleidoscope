@@ -17,4 +17,8 @@ public class CallExprAST implements ExprAST {
 	public List<ExprAST> getArgs() {
 		return args;
 	}
+	
+	public String toString() {
+		return "callee = " + callee + ", args = " + args;
+	}
 }

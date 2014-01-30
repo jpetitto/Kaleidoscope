@@ -19,4 +19,8 @@ public class IfExprAST implements ExprAST {
 	public ExprAST getElse() {
 		return elseExpr;
 	}
+	
+	public String toString() {
+		return "cond = " + condExpr + ", then = " + thenExpr + ", else = " + elseExpr;
+	}
 }

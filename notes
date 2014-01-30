@@ -1,17 +1,15 @@
 Features:
-- for loop
 - user defined operators
+- improved error feedback
 
 Lexer:
+- re-factor token to simple enum type
 - fix allowing multiple decimals in a number
 
 Parser:
 - possibly relegate AST classes to parser
 - modify exception handling between parser and lexer
 - writing tests
-
-ASTs:
-- add toString methods for debugging purposes
 
 Driver:
 - clean up and possibly merge with parser (?)

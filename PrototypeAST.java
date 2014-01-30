@@ -17,4 +17,8 @@ public class PrototypeAST {
 	public List<String> getArgs() {
 		return args;
 	}
+	
+	public String toString() {
+		return "name = " + name + ", args = " + args.toString();
+	}
 }

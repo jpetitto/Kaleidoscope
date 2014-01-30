@@ -9,4 +9,8 @@ public class NumberExprAST implements ExprAST {
 	public double getValue() {
 		return value;
 	}
+	
+	public String toString() {
+		return "value = " + value;
+	}
 }

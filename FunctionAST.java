@@ -15,4 +15,8 @@ public class FunctionAST {
 	public ExprAST getBody() {
 		return body;
 	}
+	
+	public String toString() {
+		return "prototype = " + prototype + ", body = " + body;
+	}
 }

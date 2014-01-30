@@ -20,4 +20,8 @@ public class BinaryExprAST implements ExprAST {
 	public ExprAST getRHS() {
 		return rhs;
 	}
+	
+	public String toString() {
+		return "op = " + operator + ", lhs = " + lhs + ", rhs = " + rhs;
+	}
 }
