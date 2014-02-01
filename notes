@@ -4,7 +4,7 @@ Features:
 
 Lexer:
 - re-factor token to simple enum type
-- fix allowing multiple decimals in a number
+- fix NumberFormatException with decimal points
 
 Parser:
 - possibly relegate AST classes to parser

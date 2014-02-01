@@ -59,12 +59,12 @@ public class Lexer {
 		// number: [0-9.]+
 		if (Character.isDigit(lastChar) || lastChar == '.') {
 			String numString = "";
+			boolean hasDecimal = false;
 			do {
+				if (lastChar == '.') hasDecimal = true;
 				numString += lastChar;
 				lastChar = (char) buffer.read();
-			} while (Character.isDigit(lastChar) || lastChar == '.');
-			
-			// allows multiple decimal points (needs fix)
+			} while (Character.isDigit(lastChar) || (lastChar == '.' && !hasDecimal));
 			
 			token = new Token(TokenClass.NUMBER);
 			token.setNumVal(Double.parseDouble(numString));
@@ -94,14 +94,12 @@ public class Lexer {
 		return token;
 	}
 	
-	/*
 	public static void main(String[] args) throws IOException {
-		Lexer lexer = new Lexer(new File("sourcecode.k"));
+		Lexer lexer = new Lexer(new File("numvals.txt"));
 		Token token;
 		do {
 			token = lexer.getToken();
 			System.out.println(token);
 		} while (token.getType() != TokenClass.EOF);
 	}
-	*/
 }
