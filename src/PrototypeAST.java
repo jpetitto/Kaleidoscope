@@ -1,5 +1,5 @@
+package src;
 import java.util.List;
-
 
 public class PrototypeAST {
 	private String name;

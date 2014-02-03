@@ -1,3 +1,4 @@
+package src;
 
 public class BinaryExprAST implements ExprAST {
 	private char operator;

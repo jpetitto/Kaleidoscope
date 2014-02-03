@@ -1,9 +1,10 @@
+package src;
 import java.io.FileNotFoundException;
 
 
 public class Driver {
 	public static void main(String[] args) throws FileNotFoundException {
-		Parser parser = new Parser("forloop.k");
+		Parser parser = new Parser("tests/numvals.txt");
 		Token currToken = parser.getNextToken(); // prime the pump
 		
 		while (true) {

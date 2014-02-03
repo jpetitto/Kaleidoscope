@@ -1,3 +1,4 @@
+package src;
 
 public class NumberExprAST implements ExprAST {
 	private double value;

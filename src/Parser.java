@@ -1,3 +1,4 @@
+package src;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -5,7 +6,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 
 public class Parser {
 	private Lexer lexer;
@@ -15,6 +15,7 @@ public class Parser {
 	public Parser(String fileName) throws FileNotFoundException {
 		lexer = new Lexer(new File(fileName));
 		
+		// initialize binary operator precedence levels
 		binopPrecedence = new HashMap<Character, Integer>();
 		binopPrecedence.put('<', 10);
 		binopPrecedence.put('+', 20);
@@ -22,11 +23,12 @@ public class Parser {
 		binopPrecedence.put('*', 40);
 	}
 	
+	// called by Driver class
 	public Token getCurrToken() {
 		return currToken;
 	}
 	
-	public int getTokenPrecedence() {
+	private int getTokenPrecedence() {
 		char binop = currToken.getUnknownChar();
 		Integer tokenPrec = binopPrecedence.get(binop);
 		
@@ -48,16 +50,19 @@ public class Parser {
 		return currToken;
 	}
 	
+	// report parsing error
 	public ExprAST errorExpr(String message) {
 		System.err.println("Error: " + message);
 		return null;
 	}
 	
+	// return type matches caller
 	public PrototypeAST errorPrototype(String message) {
 		errorExpr(message);
 		return null;
 	}
 	
+	// return type matches caller
 	public FunctionAST errorFunction(String message) {
 		errorExpr(message);
 		return null;
@@ -65,7 +70,7 @@ public class Parser {
 	
 	public ExprAST parseNumberExpr() {
 		ExprAST result = new NumberExprAST(currToken.getNumVal());
-		getNextToken();
+		getNextToken(); // eat number token
 		return result;
 	}
 	
@@ -78,20 +83,22 @@ public class Parser {
 		
 		if (currToken.getUnknownChar() != ')')
 			return errorExpr("expected ')'");
+		getNextToken(); // eat ')'
 		
-		getNextToken();
 		return subExpr;
 	}
 	
 	public ExprAST parseIdentifierExpr() {
 		String idName = currToken.getIdentStr();
 		
-		getNextToken();
+		getNextToken(); // eat identifier
 		
+		// check if def contains args
 		if (currToken.getUnknownChar() != '(')
 			return new VariableExprAST(idName);
+		getNextToken(); // eat '('
 		
-		getNextToken();
+		// collect and store args
 		List<ExprAST> args = new ArrayList<ExprAST>();
 		while (currToken.getUnknownChar() != ')') {
 			ExprAST arg = parseExpression();
@@ -102,27 +109,27 @@ public class Parser {
 			if (currToken.getUnknownChar() == ')')
 				break;
 			
+			// each arg must be separated by a ','
 			if (currToken.getUnknownChar() != ',')
 				return errorExpr("expected ')' or ',' in argument list");
-			
-			getNextToken();
+			getNextToken(); // eat ','
 		}
 		
-		getNextToken();
+		getNextToken(); // eat ')'
 		
 		return new CallExprAST(idName, args);
 	}
 	
 	public ExprAST parsePrimary() {
-		if (currToken.getType() == TokenClass.IDENTFIFIER)
+		if (currToken.getType() == TokenType.IDENTFIFIER)
 			return parseIdentifierExpr();
-		if (currToken.getType() == TokenClass.NUMBER)
+		if (currToken.getType() == TokenType.NUMBER)
 			return parseNumberExpr();
 		if (currToken.getUnknownChar() == '(')
 			return parseParenExpr();
-		if (currToken.getType() == TokenClass.IF)
+		if (currToken.getType() == TokenType.IF)
 			return parseIfExpr();
-		if (currToken.getType() == TokenClass.FOR)
+		if (currToken.getType() == TokenType.FOR)
 			return parseForExpr();
 		
 		return errorExpr("unknown token when expecting an expression");
@@ -143,7 +150,7 @@ public class Parser {
 				return lhs;
 			
 			char binop = currToken.getUnknownChar();
-			getNextToken();
+			getNextToken(); // eat binop
 			
 			ExprAST rhs = parsePrimary();
 			if (rhs == null)
@@ -161,32 +168,32 @@ public class Parser {
 	}
 	
 	public PrototypeAST parsePrototype() {
-		if (currToken.getType() != TokenClass.IDENTFIFIER)
+		if (currToken.getType() != TokenType.IDENTFIFIER)
 			return errorPrototype("expected function name in prototype");
 		
 		String funcName = currToken.getIdentStr();
-		getNextToken();
+		getNextToken(); // eat function identifier
 		
 		if (currToken.getUnknownChar() != '(')
 			return errorPrototype("expected '(' in prototype");
+		getNextToken(); // eat '('
 		
+		// collect and store arg names
 		List<String> argNames = new ArrayList<String>();
-		getNextToken();
-		while (currToken.getType() == TokenClass.IDENTFIFIER) {
+		while (currToken.getType() == TokenType.IDENTFIFIER) {
 			argNames.add(currToken.getIdentStr());
 			getNextToken();
 		}
 		
 		if (currToken.getUnknownChar() != ')')
 			return errorPrototype("expected ')' in prototype");
-		
-		getNextToken();
+		getNextToken(); // eat ')'
 		
 		return new PrototypeAST(funcName, argNames);
 	}
 	
 	public FunctionAST parseDefinition() {
-		getNextToken();
+		getNextToken(); // eat 'def'
 		
 		PrototypeAST prototype = parsePrototype();
 		if (prototype == null)
@@ -200,7 +207,7 @@ public class Parser {
 	}
 	
 	public PrototypeAST parseExtern() {
-		getNextToken();
+		getNextToken(); // eat 'extern'
 		return parsePrototype();
 	}
 	
@@ -222,7 +229,7 @@ public class Parser {
 		if (condExpr == null)
 			return null;
 		
-		if (currToken.getType() != TokenClass.THEN)
+		if (currToken.getType() != TokenType.THEN)
 			return errorExpr("expected 'then'");
 		getNextToken(); // eat 'then'
 		
@@ -230,7 +237,7 @@ public class Parser {
 		if (thenExpr == null)
 			return null;
 		
-		if (currToken.getType() != TokenClass.ELSE)
+		if (currToken.getType() != TokenType.ELSE)
 			return errorExpr("expected 'else'");
 		getNextToken(); // eat 'else'
 		
@@ -244,7 +251,7 @@ public class Parser {
 	public ExprAST parseForExpr() {
 		getNextToken(); // eat 'for'
 		
-		if (currToken.getType() != TokenClass.IDENTFIFIER)
+		if (currToken.getType() != TokenType.IDENTFIFIER)
 			return errorExpr("expected identifier after 'for'");
 		
 		String varName = currToken.getIdentStr();
@@ -275,7 +282,7 @@ public class Parser {
 				return null;
 		}
 		
-		if (currToken.getType() != TokenClass.IN)
+		if (currToken.getType() != TokenType.IN)
 			return errorExpr("expected 'in' after for");
 		getNextToken(); // eat 'in'
 		
@@ -285,25 +292,4 @@ public class Parser {
 		
 		return new ForExprAST(varName, start, end, step, body);
 	}
-	
-	/*
-	public static void main(String[] args) {
-		Map<Character, Integer> map = new HashMap<Character, Integer>();
-		map.put('<', 10);
-		map.put('+', 20);
-		map.put('-', 20);
-		map.put('*', 40);
-		System.out.println(map.get('<'));
-		System.out.println(map.get('+'));
-		System.out.println(map.get('-'));
-		System.out.println(map.get('*'));
-		System.out.println(map.get('>'));
-		Integer val = map.get('>');
-		System.out.println(val);
-		Integer val2 = map.get(null);
-		System.out.println(val2);
-		int val3 = val2.intValue();
-		System.out.println(val3);
-	}
-	*/
 }

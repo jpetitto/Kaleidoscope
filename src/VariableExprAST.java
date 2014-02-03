@@ -1,3 +1,4 @@
+package src;
 
 public class VariableExprAST implements ExprAST {
 	private String name;

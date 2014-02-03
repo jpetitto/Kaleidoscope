@@ -1,3 +1,4 @@
+package src;
 
 public class FunctionAST {
 	private PrototypeAST prototype;
