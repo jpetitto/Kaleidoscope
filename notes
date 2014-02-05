@@ -1,15 +1,15 @@
 Features:
 - user defined operators
 - improved error feedback
+- more constructs?
 
 Lexer:
 - re-factor token to simple enum type
-- fix NumberFormatException with decimal points
 
 Parser:
-- possibly relegate AST classes to parser
+- possibly relegate AST classes to parser (depends upon codegen)
 - modify exception handling between parser and lexer
-- writing tests
+- write more tests
 
 Driver:
 - clean up and possibly merge with parser (?)
